@@ -26,7 +26,7 @@ steps:
   displayName: 'Build the project'
   inputs:
     command: 'build'
-    projects: HexGrid*/*.csproj;!HexGridExample/*.csproj
+    projects: HexGrid/*.csproj;HexGridTest/*.csproj
     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
