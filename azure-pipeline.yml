@@ -1,0 +1,55 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+- migration-netcore
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: 'HexGrid/Barbar.HexGrid.csproj'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetCommand@2
+  displayName: 'Restore project dependencies'
+  inputs:
+    command: 'restore'
+    restoreSolution: $(solution)
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project'
+  inputs:
+    command: 'build'
+    projects: $(solution)
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    
+- task: VSTest@2
+  displayName: 'Test the project'
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack the project - $(buildConfiguration)'
+  inputs:
+    command: 'pack'
+    projects: $(solution)
+    arguments: '--no-build --configuration $(buildConfiguration)'
+    #versioningScheme: byPrereleaseNumber
+    majorVersion: '0'
+    minorVersion: '2'
+    patchVersion: '0'
+
+- task: NuGetCommand@2
+  displayName: 'Publish NuGet package'
+  inputs:
+    command: push
+    publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
+    allowPackageConflicts: true
+  condition: succeeded()
