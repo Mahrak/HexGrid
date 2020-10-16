@@ -23,10 +23,17 @@ steps:
     restoreSolution: 'HexGrid.sln;!HexGridExample/*.csproj'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build the project'
+  displayName: 'Build the project - HexGrid'
   inputs:
     command: 'build'
     projects: HexGrid/*.csproj
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - HexGridTest'
+  inputs:
+    command: 'build'
+    projects: HexGridTest/*.csproj
     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
@@ -39,7 +46,7 @@ steps:
   displayName: 'Pack the project'
   inputs:
     command: 'pack'
-    projects: HexGrid/Barbar.HexGrid.csproj
+    projects: HexGrid/*.csproj
     arguments: '--no-build --configuration $(buildConfiguration)'
     #versioningScheme: byPrereleaseNumber
     majorVersion: '0'
