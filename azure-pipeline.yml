@@ -20,13 +20,13 @@ steps:
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
-    restoreSolution: $(solution)
+    restoreSolution: 'HexGrid.sln;!HexGridExample/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the project'
   inputs:
     command: 'build'
-    projects: $(solution)
+    projects: HexGrid*/*.csproj;!HexGridExample/*.csproj
     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
