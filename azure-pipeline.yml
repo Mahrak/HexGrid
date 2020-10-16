@@ -11,7 +11,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'HexGrid/Barbar.HexGrid.csproj'
+  solution: 'HexGrid.sln;!HexGridExample/*.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -36,10 +36,10 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Pack the project - $(buildConfiguration)'
+  displayName: 'Pack the project
   inputs:
     command: 'pack'
-    projects: $(solution)
+    projects: HexGrid/Barbar.HexGrid.csproj
     arguments: '--no-build --configuration $(buildConfiguration)'
     #versioningScheme: byPrereleaseNumber
     majorVersion: '0'
