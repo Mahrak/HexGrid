@@ -16,9 +16,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: "echo Old Build number : $(build.buildId)"
+- script: "echo Old Build number : $(build.buildNumber)"
 - script: echo ##vso[build.updatebuildnumber]0.1.0.$(build.buildId)
-- script: "echo New build number : $(build.buildId)"
+- script: "echo New build number : $(build.buildNumber)"
 
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
