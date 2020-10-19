@@ -17,7 +17,7 @@ variables:
 
 steps:
 - script: "echo Old Build number : $(build.buildNumber)"
-- script: echo ##vso[build.updatebuildnumber]0.1.0.$(build.buildId)
+- script: "echo ##vso[build.updatebuildnumber]0.1.0.$(build.buildId)"
 - script: "echo New build number : $(build.buildNumber)"
 
 - task: NuGetCommand@2
