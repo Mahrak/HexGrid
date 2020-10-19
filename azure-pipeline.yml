@@ -11,30 +11,39 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'HexGrid.sln;!HexGridExample/*.csproj'
+  solution: 'HexGrid.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
+- script: echo "##vso[build.updatebuildnumber]0.1.0.$(build.buildId)"
+
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
-    restoreSolution: 'HexGrid.sln;!HexGridExample/*.csproj'
+    restoreSolution: $(solution) #'HexGrid.sln;!HexGridExample/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - HexGrid'
   inputs:
     command: 'build'
-    projects: HexGrid/*.csproj
+    projects: $(solution)
     arguments: '--no-restore --configuration $(buildConfiguration)'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'Build the project - HexGrid'
+#   inputs:
+#     command: 'build'
+#     projects: HexGrid/*.csproj
+#     arguments: '--no-restore --configuration $(buildConfiguration)'
     
-- task: DotNetCoreCLI@2
-  displayName: 'Build the project - HexGridTest'
-  inputs:
-    command: 'build'
-    projects: HexGridTest/*.csproj
-    arguments: '--no-restore --configuration $(buildConfiguration)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Build the project - HexGridTest'
+#   inputs:
+#     command: 'build'
+#     projects: HexGridTest/*.csproj
+#     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
   displayName: 'Test the project'
@@ -46,12 +55,12 @@ steps:
   displayName: 'Pack the project'
   inputs:
     command: 'pack'
-    projects: HexGrid.sln
+    projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
-    #versioningScheme: byPrereleaseNumber
-    majorVersion: '0'
-    minorVersion: '2'
-    patchVersion: '0'
+    versioningScheme: byBuildNumber
+    # majorVersion: '0'
+    # minorVersion: '2'
+    # patchVersion: '1'
 
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
