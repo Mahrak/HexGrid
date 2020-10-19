@@ -5,7 +5,6 @@
 
 trigger:
 - master
-- migration-netcore
 
 pool:
   vmImage: 'windows-latest'
