@@ -14,17 +14,18 @@ variables:
   solution: 'HexGrid.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  majorVersion: '0'
+  minorVersion: '1'
+  patchVersion: '0'
 
 steps:
-- script: "echo Old Build number : $(build.buildNumber)"
-- script: "echo ##vso[build.updatebuildnumber]0.1.0.$(build.buildId)"
-- script: "echo New build number : $(build.buildNumber)"
+- script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
 
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
-    restoreSolution: $(solution) #'HexGrid.sln;!HexGridExample/*.csproj'
+    restoreSolution: $(solution)
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - HexGrid'
@@ -32,20 +33,6 @@ steps:
     command: 'build'
     projects: $(solution)
     arguments: '--no-restore --configuration $(buildConfiguration)'
-
-# - task: DotNetCoreCLI@2
-#   displayName: 'Build the project - HexGrid'
-#   inputs:
-#     command: 'build'
-#     projects: HexGrid/*.csproj
-#     arguments: '--no-restore --configuration $(buildConfiguration)'
-    
-# - task: DotNetCoreCLI@2
-#   displayName: 'Build the project - HexGridTest'
-#   inputs:
-#     command: 'build'
-#     projects: HexGridTest/*.csproj
-#     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
   displayName: 'Test the project'
@@ -60,9 +47,6 @@ steps:
     projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
     versioningScheme: byBuildNumber
-    # majorVersion: '0'
-    # minorVersion: '2'
-    # patchVersion: '1'
 
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
