@@ -5,35 +5,32 @@
 
 trigger:
 - master
-- migration-netcore
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'HexGrid.sln;!HexGridExample/*.csproj'
+  solution: 'HexGrid.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  majorVersion: '0'
+  minorVersion: '2'
+  patchVersion: '0'
 
 steps:
+- script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
+
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
   inputs:
     command: 'restore'
-    restoreSolution: 'HexGrid.sln;!HexGridExample/*.csproj'
+    restoreSolution: $(solution)
 
 - task: DotNetCoreCLI@2
   displayName: 'Build the project - HexGrid'
   inputs:
     command: 'build'
-    projects: HexGrid/*.csproj
-    arguments: '--no-restore --configuration $(buildConfiguration)'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'Build the project - HexGridTest'
-  inputs:
-    command: 'build'
-    projects: HexGridTest/*.csproj
+    projects: $(solution)
     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: VSTest@2
@@ -46,12 +43,9 @@ steps:
   displayName: 'Pack the project'
   inputs:
     command: 'pack'
-    projects: HexGrid.sln
+    projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
-    #versioningScheme: byPrereleaseNumber
-    majorVersion: '0'
-    minorVersion: '2'
-    patchVersion: '0'
+    versioningScheme: byBuildNumber
 
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
