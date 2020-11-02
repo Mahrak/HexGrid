@@ -18,40 +18,47 @@ variables:
 
 steps:
 # - script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
-- script: "echo $(build.buildNumber)"
+- script: "echo buildNumber $(build.buildNumber)"
+- script: "echo DefinitionVersion $(Build.DefinitionVersion)"
 
-- task: NuGetCommand@2
-  displayName: 'Restore project dependencies'
+- task: AssembyInfoReader@2
   inputs:
-    command: 'restore'
-    restoreSolution: $(solution)
+    searchPattern: '**\AssemblyInfo.cs'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build the project - HexGrid'
-  inputs:
-    command: 'build'
-    projects: $(solution)
-    arguments: '--no-restore --configuration $(buildConfiguration)'
+- script: "echo assembly version $(AssemblyInfo.Version)" 
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test the project'
-  inputs:
-    command: 'test'
-    projects: $(solution)
-    arguments: '--no-build --configuration $(buildConfiguration)'
+# - task: NuGetCommand@2
+#   displayName: 'Restore project dependencies'
+#   inputs:
+#     command: 'restore'
+#     restoreSolution: $(solution)
 
-- task: DotNetCoreCLI@2
-  displayName: 'Pack the project'
-  inputs:
-    command: 'pack'
-    projects: $(solution)
-    arguments: '--no-build --configuration $(buildConfiguration)'
-    versioningScheme: byBuildNumber
+# - task: DotNetCoreCLI@2
+#   displayName: 'Build the project - HexGrid'
+#   inputs:
+#     command: 'build'
+#     projects: $(solution)
+#     arguments: '--no-restore --configuration $(buildConfiguration)'
 
-- task: NuGetCommand@2
-  displayName: 'Publish NuGet package'
-  inputs:
-    command: push
-    publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
-    allowPackageConflicts: true
-  condition: succeeded()
+# - task: DotNetCoreCLI@2
+#   displayName: 'Test the project'
+#   inputs:
+#     command: 'test'
+#     projects: $(solution)
+#     arguments: '--no-build --configuration $(buildConfiguration)'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'Pack the project'
+#   inputs:
+#     command: 'pack'
+#     projects: $(solution)
+#     arguments: '--no-build --configuration $(buildConfiguration)'
+#     versioningScheme: byBuildNumber
+
+# - task: NuGetCommand@2
+#   displayName: 'Publish NuGet package'
+#   inputs:
+#     command: push
+#     publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
+#     allowPackageConflicts: true
+#   condition: succeeded()
