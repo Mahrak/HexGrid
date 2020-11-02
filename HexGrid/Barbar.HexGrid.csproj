@@ -3,5 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <VersionPrefixe>0.2.0</VersionPrefixe>
+    <Version Condition=" '$(BUILD_BUILDID)' == '' ">$(VersionPrefixe)</Version>
+    <Version Condition=" '$(BUILD_BUILDID)' != '' ">$(VersionPrefixe).$(BUILD_BUILDID)</Version>
   </PropertyGroup>
 </Project>

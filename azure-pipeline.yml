@@ -12,12 +12,13 @@ pool:
 variables:
   solution: 'HexGrid.sln'
   buildConfiguration: 'Release'
-  majorVersion: '0'
-  minorVersion: '2'
-  patchVersion: '0'
+  # majorVersion: '0'
+  # minorVersion: '2'
+  # patchVersion: '0'
 
 steps:
-- script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
+# - script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
+- script: "echo $(build.buildNumber)"
 
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
