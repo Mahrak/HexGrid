@@ -23,7 +23,7 @@ steps:
 
 - task: AssembyInfoReader@2
   inputs:
-    searchPattern: 'HexGrid/obj/$(solution)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
+    searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
 
 - script: "echo assembly version $(AssemblyInfo.AssemblyVersion)" 
 
