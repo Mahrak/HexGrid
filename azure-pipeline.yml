@@ -21,11 +21,15 @@ steps:
 - script: "echo buildNumber $(build.buildNumber)"
 - script: "echo DefinitionVersion $(Build.DefinitionVersion)"
 
-- task: AssembyInfoReader@2
+- task: PowerShell@2
+  displayName: Show change script and check for schema changes
   inputs:
-    searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
+    targetType: 'inline'
+    script: |
+      $xml = [Xml] (Get-Content .\MyApp.csproj)
+      Write-Host "##vso[build.updatebuildnumber]$xml.Project.PropertyGroup.Version
 
-- script: "echo assembly version $(AssemblyInfo.AssemblyVersion)" 
+- script: "echo new buildNumber $(build.buildNumber)"
 
 # - task: NuGetCommand@2
 #   displayName: 'Restore project dependencies'
