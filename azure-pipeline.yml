@@ -23,9 +23,9 @@ steps:
 
 - task: AssembyInfoReader@2
   inputs:
-    searchPattern: '**\AssemblyInfo.cs'
+    searchPattern: '**/Barbar.HexGrid.AssemblyInfo.cs'
 
-- script: "echo assembly version $(AssemblyInfo.Version)" 
+- script: "echo assembly version $(AssemblyInfo.AssemblyVersion)" 
 
 # - task: NuGetCommand@2
 #   displayName: 'Restore project dependencies'
