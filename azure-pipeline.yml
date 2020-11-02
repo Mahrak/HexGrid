@@ -22,11 +22,11 @@ steps:
 - script: "echo DefinitionVersion $(Build.DefinitionVersion)"
 
 - task: PowerShell@2
-  displayName: Show change script and check for schema changes
+  displayName: Extract version number
   inputs:
     targetType: 'inline'
     script: |
-      $xml = [Xml] (Get-Content .\MyApp.csproj)
+      $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
       Write-Host "##vso[build.updatebuildnumber]$xml.Project.PropertyGroup.Version
 
 - script: "echo new buildNumber $(build.buildNumber)"
