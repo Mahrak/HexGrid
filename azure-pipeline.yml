@@ -12,27 +12,8 @@ pool:
 variables:
   solution: 'HexGrid.sln'
   buildConfiguration: 'Release'
-  # majorVersion: '0'
-  # minorVersion: '2'
-  # patchVersion: '0'
 
 steps:
-# - script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
-# - script: "echo buildNumber $(build.buildNumber)"
-# - script: "echo DefinitionVersion $(Build.DefinitionVersion)"
-
-# - task: PowerShell@2
-#   displayName: Extract version number
-#   inputs:
-#     targetType: 'inline'
-#     script: |
-#       $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
-#       $version = [Version] $xml.Project.PropertyGroup.Version
-#       Write-Host "##vso[build.updatebuildnumber]$version"
-#      Write-Host "new buildNumber $(build.buildNumber)"
-
-# - script: "echo new buildNumber $(build.buildNumber)"
-
 - task: NuGetCommand@2
   displayName: 'Restore project dependencies'
   inputs:
@@ -53,18 +34,12 @@ steps:
     projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
 
-# - task: AssembyInfoReader@2
-#   inputs:
-#     searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
-
 - task: DotNetCoreCLI@2
   displayName: 'Pack the project'
   inputs:
     command: 'pack'
     projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
-    # versioningScheme: byEnvVar
-    # versionEnvVar: AssemblyInfo.AssemblyVersion
     
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
