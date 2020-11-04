@@ -28,9 +28,9 @@ steps:
     script: |
       $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
       Write-Host "##vso[build.updatebuildnumber]$xml.Project.PropertyGroup.Version"
-      Write-Host "new buildNumber $(build.buildNumber)"
+#      Write-Host "new buildNumber $(build.buildNumber)"
 
-#- script: "echo new buildNumber $(build.buildNumber)"
+- script: "echo new buildNumber $(build.buildNumber)"
 
 # - task: NuGetCommand@2
 #   displayName: 'Restore project dependencies'
