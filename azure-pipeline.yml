@@ -18,53 +18,58 @@ variables:
 
 steps:
 # - script: "echo ##vso[build.updatebuildnumber]$(majorVersion).$(minorVersion).$(patchVersion).$(build.buildId)"
-- script: "echo buildNumber $(build.buildNumber)"
-- script: "echo DefinitionVersion $(Build.DefinitionVersion)"
+# - script: "echo buildNumber $(build.buildNumber)"
+# - script: "echo DefinitionVersion $(Build.DefinitionVersion)"
 
-- task: PowerShell@2
-  displayName: Extract version number
-  inputs:
-    targetType: 'inline'
-    script: |
-      $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
-      $version = [Version] $xml.Project.PropertyGroup.Version
-      Write-Host "##vso[build.updatebuildnumber]$version"
+# - task: PowerShell@2
+#   displayName: Extract version number
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
+#       $version = [Version] $xml.Project.PropertyGroup.Version
+#       Write-Host "##vso[build.updatebuildnumber]$version"
 #      Write-Host "new buildNumber $(build.buildNumber)"
 
-- script: "echo new buildNumber $(build.buildNumber)"
+# - script: "echo new buildNumber $(build.buildNumber)"
 
-# - task: NuGetCommand@2
-#   displayName: 'Restore project dependencies'
-#   inputs:
-#     command: 'restore'
-#     restoreSolution: $(solution)
+- task: NuGetCommand@2
+  displayName: 'Restore project dependencies'
+  inputs:
+    command: 'restore'
+    restoreSolution: $(solution)
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Build the project - HexGrid'
-#   inputs:
-#     command: 'build'
-#     projects: $(solution)
-#     arguments: '--no-restore --configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - HexGrid'
+  inputs:
+    command: 'build'
+    projects: $(solution)
+    arguments: '--no-restore --configuration $(buildConfiguration)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Test the project'
-#   inputs:
-#     command: 'test'
-#     projects: $(solution)
-#     arguments: '--no-build --configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Test the project'
+  inputs:
+    command: 'test'
+    projects: $(solution)
+    arguments: '--no-build --configuration $(buildConfiguration)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Pack the project'
-#   inputs:
-#     command: 'pack'
-#     projects: $(solution)
-#     arguments: '--no-build --configuration $(buildConfiguration)'
-#     versioningScheme: byBuildNumber
+- task: AssembyInfoReader@2
+  inputs:
+    searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
 
-# - task: NuGetCommand@2
-#   displayName: 'Publish NuGet package'
-#   inputs:
-#     command: push
-#     publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
-#     allowPackageConflicts: true
-#   condition: succeeded()
+- task: DotNetCoreCLI@2
+  displayName: 'Pack the project'
+  inputs:
+    command: 'pack'
+    projects: $(solution)
+    arguments: '--no-build --configuration $(buildConfiguration)'
+    versioningScheme: byEnvVar
+    versionEnvVar: AssemblyInfo.AssemblyVersion
+    
+- task: NuGetCommand@2
+  displayName: 'Publish NuGet package'
+  inputs:
+    command: push
+    publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
+    allowPackageConflicts: true
+  condition: succeeded()
