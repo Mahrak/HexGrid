@@ -53,9 +53,9 @@ steps:
     projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
 
-- task: AssembyInfoReader@2
-  inputs:
-    searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
+# - task: AssembyInfoReader@2
+#   inputs:
+#     searchPattern: 'HexGrid/obj/$(buildConfiguration)/netstandard1.0/Barbar.HexGrid.AssemblyInfo.cs'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack the project'
@@ -63,8 +63,8 @@ steps:
     command: 'pack'
     projects: $(solution)
     arguments: '--no-build --configuration $(buildConfiguration)'
-    versioningScheme: byEnvVar
-    versionEnvVar: AssemblyInfo.AssemblyVersion
+    # versioningScheme: byEnvVar
+    # versionEnvVar: AssemblyInfo.AssemblyVersion
     
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
