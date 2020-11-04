@@ -27,7 +27,7 @@ steps:
     targetType: 'inline'
     script: |
       $xml = [Xml] (Get-Content HexGrid/Barbar.HexGrid.csproj)
-      Write-Host "##vso[build.updatebuildnumber]$xml.Project.PropertyGroup.Version"
+      Write-Host "##vso[build.updatebuildnumber]"$xml.Project.PropertyGroup.Version
 #      Write-Host "new buildNumber $(build.buildNumber)"
 
 - script: "echo new buildNumber $(build.buildNumber)"
