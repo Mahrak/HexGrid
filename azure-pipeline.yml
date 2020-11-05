@@ -43,6 +43,7 @@ steps:
     
 - task: NuGetCommand@2
   displayName: 'Publish NuGet package'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
     command: push
     publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
