@@ -48,4 +48,3 @@ steps:
     command: push
     publishVstsFeed: 'CryHavocPoc/CryHavocExternalPackage'
     allowPackageConflicts: true
-  condition: succeeded()
